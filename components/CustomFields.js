@@ -6,7 +6,7 @@ export const CustomField = ({ ...props }) => {
 
   return (
     <>
-      <input {...field} {...props} />
+      <input className="border border-blue-600" {...field} {...props} />
       {meta.touched && meta.error ? (
         <p style={{ color: "red", fontWeight: "lighter", fontSize: "12px" }}>
           {meta.error.toUpperCase()}

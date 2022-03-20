@@ -1,14 +1,17 @@
-import React from "react";
-import Navbar from "../components/Navbar";
+import React, { useState } from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { CustomField } from "../components/CustomFields";
 import axios from "axios";
+import { toast } from "react-toastify";
+import { LoadingOutlined } from "@ant-design/icons";
+import Link from "next/link";
 
 const Register = () => {
+  const [loading, setLoading] = useState(false);
+
   return (
     <div>
-      <Navbar />
       <div className="w-100 h-[200px] bg-gradient-to-r from-blue-300 to-blue-600 flex justify-center items-center">
         <h2 className="text-6xl text-white">Register</h2>
       </div>
@@ -23,64 +26,66 @@ const Register = () => {
             name: Yup.string()
               .min(2, "name is too sort")
               .max(30, "must be 15 character or less")
-              .required("enter you your full name"),
+              .required("enter your full name"),
             email: Yup.string()
               .email("invalid email")
               .required("email is required"),
             password: Yup.string()
               .min(6, "password is too sort")
-              .required("Password rewuired"),
+              .required("Password required"),
           })}
           onSubmit={async (values, { setSubmitting, resetForm }) => {
+            setLoading(true);
             await axios
-              .post(`http://localhost:8000/api/register`, values)
-              .then((res) => {
-                console.log(res);
-
+              .post(`/api/register`, values)
+              .then(() => {
                 setSubmitting(true);
-                alert("Your Message Submitted Successfully");
+
+                toast.success("User Registered Successfully");
                 resetForm();
               })
               .catch((err) => {
-                console.log(err, err.message);
-                alert("some error occured");
-                resetForm();
+                toast.error(err.response.data);
                 setSubmitting(false);
               });
+            setLoading(false);
           }}
         >
           {() => (
-            <Form>
-              <div className="flex flex-col space-y-6 justify-center items-center">
+            <Form className="w-full">
+              <div className="flex flex-col items-center justify-center space-y-6">
                 <CustomField
-                  className="border border-black rounded py-2 px-3 md:w-[400px] sm:w-100"
+                  className="border-2 border-blue-400 rounded-lg py-2 px-3 md:w-[500px] sm:w-100"
                   name="name"
                   type="text"
                   placeholder="Enter Name"
                 />
                 <CustomField
-                  className="border border-black rounded py-2 px-3 md:w-[400px] sm:w-100"
+                  className="border-2 border-blue-400 rounded-lg py-2 px-3 md:w-[500px] sm:w-100"
                   name="email"
                   type="email"
                   placeholder="Enter Email"
                 />
                 <CustomField
-                  className="border border-black rounded py-2 px-3 md:w-[400px] sm:w-100"
+                  className="border-2 border-blue-400 rounded-lg py-2 px-3 md:w-[500px] sm:w-100"
                   name="password"
                   type="password"
                   placeholder="Enter Password"
                 />
                 <button
                   type="submit"
-                  className="w-40 h-8 rounded-md font-semibold text-yellow-100 bg-blue-400 hover:bg-blue-500 transition hover:scale-105"
+                  className="flex items-center justify-center w-48 h-10 text-lg text-yellow-200 transition bg-blue-500 rounded-lg hover:bg-blue-600 hover:scale-105"
                 >
-                  Submit
+                  {loading ? <LoadingOutlined /> : "Submit"}
                 </button>
               </div>
             </Form>
           )}
         </Formik>
       </div>
+      <p className="mt-6 text-center">
+        Already Registered? Then <Link href="/login">Login</Link>
+      </p>
     </div>
   );
 };
