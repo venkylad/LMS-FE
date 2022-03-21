@@ -1,18 +1,31 @@
 import {
   AppstoreOutlined,
   LoginOutlined,
+  LogoutOutlined,
   UserAddOutlined,
 } from "@ant-design/icons";
 import { Menu } from "antd";
 import Link from "next/link";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useRouter } from "next/router";
+import { Context } from "../context";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const { Item } = Menu;
 
 const Navbar = () => {
+  const { state, dispatch } = useContext(Context);
   const [current, setCurrent] = useState();
   const router = useRouter();
+
+  const logout = async () => {
+    const { data } = await axios.get("/api/logout");
+    dispatch({ type: "LOGOUT" });
+    window.localStorage.removeItem("user");
+    toast(data.message);
+    router.push("/login");
+  };
 
   useEffect(() => {
     setCurrent(router.pathname);
@@ -41,6 +54,9 @@ const Navbar = () => {
           key="/register"
         >
           <Link href="/register">register</Link>
+        </Item>
+        <Item onClick={logout} icon={<LogoutOutlined />} key="/logout">
+          Logout
         </Item>
       </Menu>
     </>
