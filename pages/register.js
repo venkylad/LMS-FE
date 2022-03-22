@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { CustomField } from "../components/CustomFields";
@@ -6,9 +6,21 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { LoadingOutlined } from "@ant-design/icons";
 import Link from "next/link";
+import { useRouter } from "next/router";
+import { Context } from "../context";
 
 const Register = () => {
+  const { state, dispatch } = useContext(Context);
+  const { user } = state;
+
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (user !== null) {
+      router.push("/");
+    }
+  }, [user, router]);
 
   return (
     <div>

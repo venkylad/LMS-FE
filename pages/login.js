@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { CustomField } from "../components/CustomFields";
@@ -15,6 +15,13 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
 
   const { state, dispatch } = useContext(Context);
+  const { user } = state;
+
+  useEffect(() => {
+    if (user !== null) {
+      router.push("/");
+    }
+  }, [user, router]);
 
   return (
     <div>

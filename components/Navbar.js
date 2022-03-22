@@ -12,10 +12,12 @@ import { Context } from "../context";
 import axios from "axios";
 import { toast } from "react-toastify";
 
-const { Item } = Menu;
+const { Item, SubMenu } = Menu;
 
 const Navbar = () => {
   const { state, dispatch } = useContext(Context);
+  const { user } = state;
+
   const [current, setCurrent] = useState();
   const router = useRouter();
 
@@ -41,23 +43,36 @@ const Navbar = () => {
         >
           <Link href="/">Home</Link>
         </Item>
-        <Item
-          onClick={(e) => setCurrent(e.key)}
-          icon={<LoginOutlined />}
-          key="/login"
-        >
-          <Link href="/login">login</Link>
-        </Item>
-        <Item
-          onClick={(e) => setCurrent(e.key)}
-          icon={<UserAddOutlined />}
-          key="/register"
-        >
-          <Link href="/register">register</Link>
-        </Item>
-        <Item onClick={logout} icon={<LogoutOutlined />} key="/logout">
-          Logout
-        </Item>
+        {user === null && (
+          <>
+            <Item
+              onClick={(e) => setCurrent(e.key)}
+              icon={<LoginOutlined />}
+              key="/login"
+            >
+              <Link href="/login">login</Link>
+            </Item>
+            <Item
+              onClick={(e) => setCurrent(e.key)}
+              icon={<UserAddOutlined />}
+              key="/register"
+            >
+              <Link href="/register">register</Link>
+            </Item>
+          </>
+        )}
+
+        {user !== null && (
+          <SubMenu
+            icon={<LogoutOutlined />}
+            title={user?.name}
+            className="float-right ml-auto"
+          >
+            <Item onClick={logout} key="/logout">
+              Logout
+            </Item>
+          </SubMenu>
+        )}
       </Menu>
     </>
   );
