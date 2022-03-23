@@ -12,7 +12,7 @@ import { Context } from "../context";
 import axios from "axios";
 import { toast } from "react-toastify";
 
-const { Item, SubMenu } = Menu;
+const { Item, SubMenu, ItemGroup } = Menu;
 
 const Navbar = () => {
   const { state, dispatch } = useContext(Context);
@@ -68,9 +68,14 @@ const Navbar = () => {
             title={user?.name}
             className="float-right ml-auto"
           >
-            <Item onClick={logout} key="/logout">
-              Logout
-            </Item>
+            <ItemGroup>
+              <Item onClick={(e) => setCurrent(e.key)} key="/user">
+                <Link href="/user">Dashboard</Link>
+              </Item>
+              <Item onClick={logout} key="/logout">
+                Logout
+              </Item>
+            </ItemGroup>
           </SubMenu>
         )}
       </Menu>
